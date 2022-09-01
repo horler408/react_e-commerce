@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { useParams, NavLink } from 'react-router-dom';
 
-import { addCart } from '../../redux/actions';
+import { addCart, delCart } from '../../redux/actions';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -11,6 +11,8 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
+
+  const state = useSelector((state) => state.handleCart);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -25,6 +27,10 @@ const ProductDetail = () => {
 
   const addProduct = (product) => {
     dispatch(addCart(product));
+  };
+
+  const removeProduct = (item) => {
+    dispatch(delCart(item));
   };
 
   const Loading = () => {
@@ -68,6 +74,7 @@ const ProductDetail = () => {
             </p>
             <h3 className="display-6 fw-bold my-4">$ {product.price}</h3>
             <p className="lead">{product.description}</p>
+            {state.some((x) => x.id === product.id)}
             <button
               className="btn btn-outline-dark px-4 py-2"
               onClick={() => addProduct(product)}
